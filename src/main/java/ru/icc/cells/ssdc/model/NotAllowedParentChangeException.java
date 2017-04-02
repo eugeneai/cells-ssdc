@@ -21,7 +21,12 @@ package ru.icc.cells.ssdc.model;
  */
 public final class NotAllowedParentChangeException extends ParentAssociatingException
 {
-    public NotAllowedParentChangeException( CLabel child, CLabel parent, CLabel failedParent )
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 4505497217123052214L;
+
+	public NotAllowedParentChangeException( CLabel child, CLabel parent, CLabel failedParent )
     {
         super( child, parent, failedParent, "\"The label is already associated with the parent label\"" );
     }

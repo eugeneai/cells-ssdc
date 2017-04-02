@@ -141,6 +141,7 @@ public final class CanonicalForm
             FileOutputStream fileOut = new FileOutputStream(outputFile);
             wb.write(fileOut);
             fileOut.close();
+            wb.close();
         }
         catch ( Exception e )
         {

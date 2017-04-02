@@ -22,7 +22,12 @@ package ru.icc.cells.ssdc.model;
 
 public final class NotAllowedParentCycleException extends ParentAssociatingException
 {
-    public NotAllowedParentCycleException( CLabel child, CLabel parent, CLabel failedParent )
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -6023796241481485916L;
+
+	public NotAllowedParentCycleException( CLabel child, CLabel parent, CLabel failedParent )
     {
         super( child, parent, failedParent, "\"Label cycles are not allowed\"" );
     }

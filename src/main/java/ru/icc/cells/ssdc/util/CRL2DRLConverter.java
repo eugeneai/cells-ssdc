@@ -46,8 +46,10 @@ public final class CRL2DRLConverter
 
     public String expandDRL(String drlFilePath) throws Exception
     {
+        Scanner scanner = new Scanner( new File( drlFilePath ), "UTF-8" );
         Reader dslReader = new FileReader( DSL_PATH );
-        String drl = new Scanner( new File( drlFilePath ), "UTF-8" ).useDelimiter( "\\A" ).next();
+        String drl = scanner.useDelimiter( "\\A" ).next();
+        scanner.close();
         DrlParser parser = new DrlParser();
         return parser.getExpandedDRL( drl, dslReader );
     }

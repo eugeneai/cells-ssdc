@@ -36,6 +36,7 @@ import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.definition.KnowledgePackage;
 import org.kie.internal.io.ResourceFactory;
 import org.kie.internal.runtime.StatefulKnowledgeSession;
+
 import ru.icc.cells.ssdc.model.*;
 import ru.icc.cells.ssdc.writers.*;
 
@@ -43,6 +44,7 @@ import ru.icc.cells.ssdc.writers.*;
  * Created by Alexey Shigarov (shigarov@gmail.com) on 01.02.2015.
  */
 
+@SuppressWarnings("deprecation")
 public final class App
 {
     // Params
@@ -620,7 +622,3 @@ public final class App
 
     private App() {}
 }
-
-
-
-

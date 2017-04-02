@@ -199,6 +199,7 @@ public final class CTable
             FileOutputStream fileOut = new FileOutputStream(outputFile);
             wb.write(fileOut);
             fileOut.close();
+            wb.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -22,7 +22,12 @@ package ru.icc.cells.ssdc.model;
 
 public abstract class ParentAssociatingException extends Exception
 {
-    protected ParentAssociatingException( CLabel child, CLabel parent, CLabel failedParent, String message )
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 3383852680564662219L;
+
+	protected ParentAssociatingException( CLabel child, CLabel parent, CLabel failedParent, String message )
     {
         super( String.format( "%s [child: \"%s\"; parent: \"%s\"; failed parent: \"%s\"]",
                message, child.getValue(), parent.getValue(), failedParent.getValue() ) );

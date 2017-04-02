@@ -22,6 +22,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.*;
+
 import ru.icc.cells.ssdc.model.*;
 import ru.icc.cells.ssdc.model.style.*;
 
@@ -138,7 +139,7 @@ public final class DataLoader
 
                 int colAdr = excelCell.getColumnIndex() - refColAdr + 1;
                 int rowAdr = excelCell.getRowIndex() - refRowAdr + 1;
-                
+
                 int cl = colAdr;
                 int cr = colAdr;
                 int rt = rowAdr;
@@ -216,7 +217,7 @@ public final class DataLoader
         return table;
     }
 
-    private CPoint findPreviousPoint( Sheet sheet, String tag, int startRow )
+	private CPoint findPreviousPoint( Sheet sheet, String tag, int startRow )
     {
         for ( int i = startRow; i > -1; i -- )
         {
@@ -377,7 +378,7 @@ public final class DataLoader
                     font.setTypeOffset(XSSFFont.SS_NONE);
                 }
 
-                String s = richText.substring(index, index + length);
+				String s = richText.substring(index, index + length);
 
                 if ( font.getTypeOffset() == XSSFFont.SS_SUPER )
                     return true;

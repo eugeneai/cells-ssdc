@@ -22,7 +22,12 @@ package ru.icc.cells.ssdc.model;
 
 public final class EntryAssociatingException extends IllegalStateException
 {
-    public EntryAssociatingException( CEntry entry, CLabel addingLabel, CLabel addedLabel, CCategory category )
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -6793837858613038407L;
+
+	public EntryAssociatingException( CEntry entry, CLabel addingLabel, CLabel addedLabel, CCategory category )
     {
         super( String.format( "%s [entry: \"%s\"; adding label: \"%s\"; added label: \"%s\"; category: \"%s\"]",
                "The entry is already associated with a label from the same category",

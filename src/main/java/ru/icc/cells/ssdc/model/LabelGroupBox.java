@@ -18,176 +18,152 @@ package ru.icc.cells.ssdc.model;
 
 import java.util.*;
 
+import ru.icc.cells.ssdc.model.LabelGroupBox.LabelPair;
+
 /**
  * Created by Alexey Shigarov (shigarov@gmail.com) on 04.02.2015.
  */
 
-public final class LabelGroupBox extends COwned
-{
-    private static final String GROUP_FIELD_NAME = "GROUP";
+public final class LabelGroupBox extends COwned {
+	private static final String GROUP_FIELD_NAME = "GROUP";
 
-    private Set<LabelPair> labelPairs =  new HashSet<LabelPair>();
+	private Set<LabelPair> labelPairs = new HashSet<LabelPair>();
 
-    private List<LabelGroup> labelGroups = new ArrayList<LabelGroup>();
+	private List<LabelGroup> labelGroups = new ArrayList<LabelGroup>();
 
-    int numOfLabelGroups()
-    {
-        return labelGroups.size();
-    }
+	int numOfLabelGroups() {
+		return labelGroups.size();
+	}
 
-    private CCategory category;
+	private CCategory category;
 
-    void update() throws Exception
-    {
-        initLabelGroups();
-        updateCategory();
-    }
+	void update() throws Exception {
+		initLabelGroups();
+		updateCategory();
+	}
 
-    private void updateCategory() throws Exception
-    {
-        int id = 0;
-        for ( LabelGroup group : labelGroups )
-        {
-            CCategory groupCategory = null;
-            for ( CLabel label : group.labels )
-            {
-                CCategory labelCategory = label.getCategory();
-                if ( null == groupCategory && null != labelCategory )
-                {
-                    groupCategory = labelCategory;
-                }
-                if ( null != groupCategory && ! labelCategory.equals( groupCategory ) )
-                {
-                    // TODO generating an exception or warning
-                    throw new Exception( String.format(
-                            "Labels in the same group are belong more than one categories: \"%s\" and \"%s\"",
-                            groupCategory.getName(), labelCategory.getName() )
-                    );
-                }
-            }
-            if ( null == groupCategory )
-            {
-                id ++;
-                try
-                {
-                    category = getOwner().getLocalCategoryBox().newCategory( GROUP_FIELD_NAME + id  );
-                }
-                catch ( Exception e )
-                {
-                    // TODO is it possible?
-                    e.printStackTrace();
-                }
-            }
-            for ( CLabel label : group.labels )
-            {
-                label.setCategory(category);
-            }
-        }
-    }
+	private void updateCategory() throws Exception {
+		int id = 0;
+		for (LabelGroup group : labelGroups) {
+			CCategory groupCategory = null;
+			for (CLabel label : group.labels) {
+				CCategory labelCategory = label.getCategory();
+				if (null == groupCategory && null != labelCategory) {
+					groupCategory = labelCategory;
+				}
+				if (null != groupCategory && !labelCategory.equals(groupCategory)) {
+					// TODO generating an exception or warning
+					throw new Exception(String.format(
+							"Labels in the same group are belong more than one categories: \"%s\" and \"%s\"",
+							groupCategory.getName(), labelCategory.getName()));
+				}
+			}
+			if (null == groupCategory) {
+				id++;
+				try {
+					category = getOwner().getLocalCategoryBox().newCategory(GROUP_FIELD_NAME + id);
+				} catch (Exception e) {
+					// TODO is it possible?
+					e.printStackTrace();
+				}
+			}
+			for (CLabel label : group.labels) {
+				label.setCategory(category);
+			}
+		}
+	}
 
-    private LabelGroup newLabelGroup()
-    {
-        LabelGroup group = new LabelGroup();
-        labelGroups.add( group );
-        return group;
-    }
+	private LabelGroup newLabelGroup() {
+		LabelGroup group = new LabelGroup();
+		labelGroups.add(group);
+		return group;
+	}
 
-    private void initLabelGroups()
-    {
-        if ( labelPairs.size() == 0 ) return;
+	private void initLabelGroups() {
+		if (labelPairs.size() == 0)
+			return;
 
-        List<LabelPair> tempPairs =  new ArrayList( labelPairs.size() );
-        tempPairs.addAll( labelPairs );
+		List<LabelPair> tempPairs = new ArrayList<LabelPair>(labelPairs.size());
+		tempPairs.addAll(labelPairs);
 
-        Stack<CLabel> groupStack = new Stack<CLabel>();
-        List<LabelPair> trash = new ArrayList<LabelPair>();
+		Stack<CLabel> groupStack = new Stack<CLabel>();
+		List<LabelPair> trash = new ArrayList<LabelPair>();
 
-        while ( tempPairs.size() > 0 )
-        {
-            LabelPair pair0 = tempPairs.get( 0 );
-            LabelGroup group = newLabelGroup();
+		while (tempPairs.size() > 0) {
+			LabelPair pair0 = tempPairs.get(0);
+			LabelGroup group = newLabelGroup();
 
-            group.addLabel( pair0.label1 );
-            group.addLabel( pair0.label2 );
+			group.addLabel(pair0.label1);
+			group.addLabel(pair0.label2);
 
-            groupStack.push( pair0.label1 );
-            groupStack.push( pair0.label2 );
+			groupStack.push(pair0.label1);
+			groupStack.push(pair0.label2);
 
-            tempPairs.remove( 0 );
+			tempPairs.remove(0);
 
-            while ( ! groupStack.empty() )
-            {
-                CLabel groupedLabel = groupStack.pop();
-                Iterator<LabelPair> pairs = tempPairs.iterator();
+			while (!groupStack.empty()) {
+				CLabel groupedLabel = groupStack.pop();
+				Iterator<LabelPair> pairs = tempPairs.iterator();
 
-                while ( pairs.hasNext() )
-                {
-                    LabelPair pair = pairs.next();
+				while (pairs.hasNext()) {
+					LabelPair pair = pairs.next();
 
-                    CLabel candidate = groupedLabel.equals( pair.label1 ) ? pair.label2 :
-                            groupedLabel.equals( pair.label2 ) ? pair.label1 : null;
+					CLabel candidate = groupedLabel.equals(pair.label1) ? pair.label2
+							: groupedLabel.equals(pair.label2) ? pair.label1 : null;
 
-                    if ( null == candidate ) continue;
+					if (null == candidate)
+						continue;
 
-                    if ( ! groupStack.contains( candidate ) )
-                    {
-                        groupStack.push( candidate );
-                        group.labels.add( candidate );
-                    }
-                    trash.add( pair );
-                    pairs.remove();
-                }
-            }
-            tempPairs.removeAll( trash );
-            trash.clear();
-        }
-    }
+					if (!groupStack.contains(candidate)) {
+						groupStack.push(candidate);
+						group.labels.add(candidate);
+					}
+					trash.add(pair);
+					pairs.remove();
+				}
+			}
+			tempPairs.removeAll(trash);
+			trash.clear();
+		}
+	}
 
-    void group( CLabel label1, CLabel label2 )
-    {
-        //if ( ! label1.equals( label2 ) )
-        labelPairs.add( new LabelPair( label1, label2) );
-    }
+	void group(CLabel label1, CLabel label2) {
+		//if ( ! label1.equals( label2 ) )
+		labelPairs.add(new LabelPair(label1, label2));
+	}
 
-    public String trace()
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append( "Grouped labels:\r\n\t" );
+	public String trace() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Grouped labels:\r\n\t");
 
-        if ( labelPairs.size() == 0 )
-        {
-            sb.append( "no pairs" );
-        }
-        else
-        {
-            int c = 0;
-            for ( LabelPair pair : labelPairs )
-            {
-                sb.append( String.format( "(\"%s\", \"%s\")", pair.label1.getValue(), pair.label2.getValue() ) );
-                if ( c < labelPairs.size() - 1 ) sb.append( ", " );
-                c ++;
-            }
-        }
-        return sb.toString();
-    }
+		if (labelPairs.size() == 0) {
+			sb.append("no pairs");
+		} else {
+			int c = 0;
+			for (LabelPair pair : labelPairs) {
+				sb.append(String.format("(\"%s\", \"%s\")", pair.label1.getValue(), pair.label2.getValue()));
+				if (c < labelPairs.size() - 1)
+					sb.append(", ");
+				c++;
+			}
+		}
+		return sb.toString();
+	}
 
-    LabelGroupBox( CTable owner )
-    {
-        //this.owner = owner;
-        super( owner );
-    }
+	LabelGroupBox(CTable owner) {
+		//this.owner = owner;
+		super(owner);
+	}
 
-    private class LabelGroup
-    {
-        private Set<CLabel> labels = new HashSet<CLabel>();
+	private class LabelGroup {
+		private Set<CLabel> labels = new HashSet<CLabel>();
 
-        private void addLabel( CLabel label )
-        {
-            labels.add( label );
-        }
-    }
+		private void addLabel(CLabel label) {
+			labels.add(label);
+		}
+	}
 
-    private class LabelPair
+	public class LabelPair
     {
         private CLabel label1;
         private CLabel label2;
